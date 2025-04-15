@@ -48,5 +48,16 @@ if st.button("Predict"):
 
     car_price = model.predict(input_data_model)
 
-    st.markdown(f"Car Price is going to be ₹{car_price[0]:,.2f}")
+    def format_inr(value):
+    s = f"{value:,.2f}"
+    x = s.split(".")[0]
+    x = x.replace(",", "")  # remove default commas
+    if len(x) > 3:
+        last3 = x[-3:]
+        rest = x[:-3]
+        rest = ",".join([rest[max(i-2,0):i] for i in range(len(rest), 0, -2)][::-1])
+        x = rest + "," + last3
+    return f"₹{x}.{s.split('.')[1]}"
 
+formatted_price = format_inr(car_price[0])
+st.markdown(f"Car Price is going to be {formatted_price}")
